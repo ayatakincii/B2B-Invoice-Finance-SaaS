@@ -8,11 +8,20 @@ import { ClientsModule } from './clients/clients.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { PaymentsModule } from './payments/payments.module';
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [AuthModule, OrganizationsModule, UsersModule, ClientsModule, InvoicesModule, ExpensesModule, PaymentsModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    OrganizationsModule,
+    UsersModule,
+    ClientsModule,
+    InvoicesModule,
+    ExpensesModule,
+    PaymentsModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}
