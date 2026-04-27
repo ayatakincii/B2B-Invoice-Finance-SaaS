@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id               String   @id @default(uuid())
+  name             String
+  slug             String   @unique
+  plan             String   @default("free")
+  stripeCustomerId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  users     User[]
+  clients   Client[]
+  invoices  Invoice[]
+  expenses  Expense[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("member")
+  createdAt    DateTime @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  address   String?
+  createdAt DateTime @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  invoices       Invoice[]
+}
+
+model Invoice {
+  id        String   @id @default(uuid())
+  status    String   @default("draft")
+  dueDate   DateTime
+  total     Float    @default(0)
+  createdAt DateTime @default(now())
+
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  organizationId String
+  client         Client        @relation(fields: [clientId], references: [id])
+  clientId       String
+  items          InvoiceItem[]
+  payment        Payment?
+}
+
+model InvoiceItem {
+  id          String @id @default(uuid())
+  description String
+  qty         Float
+  unitPrice   Float
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId String
+}
+
+model Expense {
+  id         String   @id @default(uuid())
+  category   String
+  amount     Float
+  date       DateTime
+  receiptUrl String?
+  createdAt  DateTime @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+}
+
+model Payment {
+  id                    String   @id @default(uuid())
+  stripePaymentIntentId String
+  status                String
+  createdAt             DateTime @default(now())
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId String  @unique
+}

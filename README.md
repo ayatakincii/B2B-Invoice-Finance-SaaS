@@ -1,6 +1,6 @@
 # B2B Invoice / Finance SaaS
 
-A multi-tenant finance platform for freelancers and SMEs to manage clients, invoices, recurring billing, expenses, tax summaries, and payment tracking.
+Multi-tenant finance platform for freelancers and SMEs to manage clients, invoices, recurring billing, expenses, tax summaries, and payment tracking.
 
 This project is currently in active development as part of my transition from Frontend Engineering into Full-Stack Development.
 
